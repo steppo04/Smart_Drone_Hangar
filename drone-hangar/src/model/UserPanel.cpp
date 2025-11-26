@@ -1,5 +1,7 @@
 #include "UserPanel.h"
 #include <Arduino.h>
+#include "config.h"
+#include "HWPlatform.h"
 
  UserPanel::UserPanel(HWPlatform* pHW) {
     pLcd = pHW->getUserPanelLcd();

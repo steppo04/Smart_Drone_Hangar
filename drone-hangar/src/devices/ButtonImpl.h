@@ -8,10 +8,14 @@ class ButtonImpl: public Button {
 public: 
   ButtonImpl(int pin);
   bool isPressed();
+  bool isClicked();
+
+  void sync();
 
 private:
   int pin;
-
+  bool pressed;
+  bool clicked;
 };
 
 #endif

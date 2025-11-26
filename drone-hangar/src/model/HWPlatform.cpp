@@ -4,9 +4,8 @@
 #include "kernel/MsgService.h"
 #include "config.h"
 #include "devices/Led.h"
-#include "devices/LightSensorImpl.h"
 #include "devices/TempSensorTMP36.h"
-#include "devices/servo_motor_impl.h"
+#include "devices/ServoMotorImpl.h"
 #include "kernel/Logger.h"
 
 void wakeUp(){}
@@ -19,6 +18,6 @@ HWPlatform::HWPlatform() {
     pLcd = new LiquidCrystal_I2C(0x27,20,4); 
     pMotorDoor = new ServoMotorImpl(MOTOR_PIN);
     pPirDetector = new Pir(PIR_PIN);
-    pSonarDetector = new Sonar (SONAR_ECHO_PIN,SONAR_TRIG_PIN);
+    pSonarDetector = new Sonar(SONAR_ECHO_PIN, SONAR_TRIG_PIN, 10000);
     pTempSensor = new TempSensorTMP36(TEMP_SENSOR_PIN);
 }

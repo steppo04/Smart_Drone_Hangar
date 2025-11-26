@@ -1,6 +1,9 @@
 #ifndef USERPANEL_H
 #define USERPANEL_H
 
+#include "config.h"
+#include "HWPlatform.h"
+
 // Dichiarazioni forward dei tipi hardware usati
 class LiquidCrystal_I2C; // LCD I2C
 class Button;           // Pulsante RESET
@@ -33,7 +36,7 @@ public:
     void displayTakeOff();
     void displayLanding();
     void displayDroneOut();
-    void displayAlarm(
+    void displayAlarm();
     // --- Metodi di Input Pulsante ---
     
     /**
