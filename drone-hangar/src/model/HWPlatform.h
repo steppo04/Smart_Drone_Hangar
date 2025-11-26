@@ -11,7 +11,7 @@
 #include "devices/Sonar.h"
 #include "devices/TempSensor.h"
 #include "devices/Led.h"
-#include "devices/servo_motor.h"
+#include "devices/ServoMotor.h"
 
 class HWPlatform {
 

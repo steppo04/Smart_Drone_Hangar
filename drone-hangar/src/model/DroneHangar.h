@@ -46,7 +46,7 @@ class DroneHangar {
     void setLed3AlarmOn();
     void setLed3AlarmOff();
 
-    HWPlatform* pHW;
+    //HWPlatform* pHW;
     bool droneDetected;
     float droneDistance;
     float temperature;
