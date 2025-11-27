@@ -7,12 +7,11 @@
 // Dichiarazioni forward dei tipi hardware usati
 class LiquidCrystal_I2C; // LCD I2C
 class Button;           // Pulsante RESET
-class Led;              // LED L1, L2, L3
 class HWPlatform;       // Piattaforma Hardware
 
 class UserPanel {
 private:
-    // Componenti di Output (LCD e LED)
+    // Componenti di Output (LCD)
     LiquidCrystal_I2C* pLcd; 
     
     // Componenti di Input (Pulsante)
