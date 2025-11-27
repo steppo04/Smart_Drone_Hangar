@@ -11,7 +11,6 @@ class DroneHangar {
 
     //sensors
     float getDroneDistance();
-    bool isDroneDetected();
     float getTemperature();
     bool isTempHigh();
     bool isTempVeryHigh();
@@ -20,38 +19,40 @@ class DroneHangar {
     //drone logic state
     bool isDroneInside();
     bool isDroneOutside();
-    bool isDoorOpen();
-    bool isDoorClosed();
     bool isInPreAlarm();
     bool isInAlarm();
 
     //actuators
     void openDoor();
+    void stopOpeningDoor();
     void closeDoor();
-    void stopDoor();
+    void stopClosingDoor();
 
     //sensors synchronization
-    void syncSensors();
+    void sync();
 
     //internal data accessors
     float getTemperature();
     float getDroneDistance();
-    bool isDroneDetectedByPIR();
+    bool isDroneDetected();
+    bool isHangarPreAlarm();
     bool isHangarAlarmed();
 
+    //other
+    void reset();
+    void setPreAlarm();
+    void setAlarm();
+
   private:
-    void setLed1On();
-    void setLed1Off();
-    void setLed2TakeoffBlinking();
-    void setLed2TakeoffOff();
-    void setLed3AlarmOn();
-    void setLed3AlarmOff();
+    bool sensorsCanBeUsed();
+    String stateToString();
 
     HWPlatform* pHW;
-    bool droneDetected;
+    bool dronePIRDetected;
     float droneDistance;
     float temperature;
     bool hangarAlarmed;
-
+    bool hangarPreAlarm;
+    bool isHangarOk;
 };
 #endif
