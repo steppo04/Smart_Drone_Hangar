@@ -7,7 +7,7 @@
 
 #define BT_RESET_PIN 2
 
-#define TEMP_SENSOR_PIN A2
+#define TEMP_SENSOR_PIN 3
 #define LED_START_PIN 11
 
 #define PIR_PIN 2

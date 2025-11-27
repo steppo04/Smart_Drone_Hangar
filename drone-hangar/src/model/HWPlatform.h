@@ -1,12 +1,12 @@
 
 #ifndef __HW_PLATFORM__
 #define __HW_PLATFORM__
-
+#include <Arduino.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
 #include "config.h"
 #include "devices/Button.h"
 #include "devices/Led.h"
-#include <Wire.h> 
-#include <LiquidCrystal_I2C.h>
 #include "devices/Pir.h"
 #include "devices/Sonar.h"
 #include "devices/TempSensor.h"
