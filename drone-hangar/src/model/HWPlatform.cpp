@@ -1,4 +1,3 @@
-
 #include "HWPlatform.h"
 #include "devices/ButtonImpl.h"
 #include "kernel/MsgService.h"

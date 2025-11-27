@@ -2,10 +2,11 @@
 #define DRONEHANGAR_H
 #include <Arduino.h>
 #include "config.h"
+#include "HWPlatform.h"
 
 class DroneHangar {
   public:
-    DroneHangar(/*HWplatform* hw*/);
+    DroneHangar(HWPlatform* hw);
     void init();
 
     //sensors
@@ -46,7 +47,7 @@ class DroneHangar {
     void setLed3AlarmOn();
     void setLed3AlarmOff();
 
-    //HWPlatform* pHW;
+    HWPlatform* pHW;
     bool droneDetected;
     float droneDistance;
     float temperature;

@@ -1,4 +1,3 @@
-
 #ifndef __HW_PLATFORM__
 #define __HW_PLATFORM__
 #include <Arduino.h>
