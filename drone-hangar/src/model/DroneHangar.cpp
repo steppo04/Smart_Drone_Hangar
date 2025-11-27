@@ -3,8 +3,8 @@
 
 #define D1 100.0  // distance threshold for drone detection in cm
 #define D2 30.0   // distance threshold for drone inside hangar in cm
-#define T1 30.0   // temperature threshold for high temperature in degree Celsius
-#define T2 40.0   // temperature threshold for very high temperature in degree Celsius
+#define TEMP1 30.0   // temperature threshold for high temperature in degree Celsius
+#define TEMP2 40.0   // temperature threshold for very high temperature in degree Celsius
 
 
 DroneHangar::DroneHangar(HWPlatform* hw) {
@@ -37,15 +37,15 @@ float DroneHangar::getTemperature() {
 }
 
 bool DroneHangar::isTempHigh() {
-    return (temperature >= T1);
+    return (temperature >= TEMP1);
 }
 
 bool DroneHangar::isTempVeryHigh() {
-    return (temperature >= T2);
+    return (temperature >= TEMP2);
 }
 
 bool DroneHangar::isTempOk() {
-    return (temperature < T1);
+    return (temperature < TEMP1);
 }
 
 //drone logic state
