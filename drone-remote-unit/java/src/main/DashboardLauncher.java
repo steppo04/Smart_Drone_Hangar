@@ -1,7 +1,5 @@
 package main;
 
-import javax.swing.SwingUtilities;
-
 class DashboardLauncher   {
 
 	static DashboardView view = null;
