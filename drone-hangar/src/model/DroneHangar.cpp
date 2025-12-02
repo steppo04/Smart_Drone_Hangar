@@ -86,6 +86,14 @@ void DroneHangar::stopClosingDoor() {
     pHW->getDoorMotor()->off();
 }
 
+void DroneHangar::activateDoor() {
+    pHW->getDoorMotor()->on();
+}
+
+void DroneHangar::deactivateDoor() {
+    pHW->getDoorMotor()->off();
+}
+
 void DroneHangar::sync() {
     float dist = droneDistance;
     float temp = temperature;

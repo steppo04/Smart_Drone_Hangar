@@ -27,6 +27,8 @@ class DroneHangar {
     void stopOpeningDoor();
     void closeDoor();
     void stopClosingDoor();
+    void activateDoor();
+    void deactivateDoor();
 
     //sensors synchronization
     void sync();
