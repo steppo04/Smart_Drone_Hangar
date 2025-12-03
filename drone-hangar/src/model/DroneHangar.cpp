@@ -18,8 +18,11 @@ void DroneHangar::init() {
     hangarPreAlarm = false;
     hangarAlarmed = false;
     dronePIRDetected = false;
+    lastToggleTimeL2 = 0;
+    led2State = false;
+    currentTimeL2 = millis();
 
-    this-> reset();
+    this->reset();
     pHW->getDoorMotor()->on();
     pHW->getStartLed()->switchOn();
     pHW->getActionLed()->switchOff();
@@ -73,17 +76,9 @@ void DroneHangar::openDoor() {
     }
 }
 
-void DroneHangar::stopOpeningDoor() {
-    pHW->getDoorMotor()->off();
-}
-
 void DroneHangar::closeDoor() {
     pHW->getDoorMotor()->on();
     pHW->getDoorMotor()->setPosition(0);
-}
-
-void DroneHangar::stopClosingDoor() {
-    pHW->getDoorMotor()->off();
 }
 
 void DroneHangar::activateDoor() {
@@ -106,7 +101,7 @@ void DroneHangar::sync() {
         droneDetected = pHW->getDetectorPir()->isDetected();
 
         if (dist == NO_OBJ_DETECTED) {
-            dist = D1; // drone assente
+            dist = D1;
         }
 
         droneDistance = dist;
@@ -249,6 +244,20 @@ void DroneHangar::setAlarm() {
     pHW->getActionLed()->switchOff();
     pHW->getAlarmLed()->switchOn();
 }
+
+void DroneHangar::blinkLed() {
+    currentTimeL2 = millis();
+    if (currentTimeL2 - lastToggleTimeL2 >= 500) {
+        led2State = !led2State;
+        if (led2State) {
+            pHW->getActionLed()->switchOn();
+        } else {
+            pHW->getActionLed()->switchOff();
+        }
+        lastToggleTimeL2 = currentTimeL2;
+    }
+}
+
 
 //private methods
 
