@@ -1,5 +1,6 @@
 #ifndef DRONEHANGAR_H
 #define DRONEHANGAR_H
+#include "Dashboard.h"
 #include <Arduino.h>
 #include "config.h"
 #include "HWPlatform.h"
@@ -45,10 +46,14 @@ class DroneHangar {
     void setPreAlarm();
     void setAlarm();
 
+    void setAllowNewOperations(bool allowed);
+    bool isNewOperationAllowed();
+
   private:
     bool sensorsCanBeUsed();
     String stateToString();
 
+    Dashboard* pDashboard;
     HWPlatform* pHW;
     bool dronePIRDetected;
     float droneDistance;
@@ -56,5 +61,6 @@ class DroneHangar {
     bool hangarAlarmed;
     bool hangarPreAlarm;
     bool isHangarOk;
+    bool allowNewOperations;
 };
 #endif

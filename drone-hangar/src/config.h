@@ -17,4 +17,9 @@
 
 #define MOTOR_PIN 9
 
+#define TEMP1 40 
+#define T3_MILLIS 5000
+#define TEMP2 60 
+#define T4_MILLIS 10000
+
 #endif

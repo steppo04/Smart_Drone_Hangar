@@ -18,6 +18,7 @@ void DroneHangar::init() {
     hangarPreAlarm = false;
     hangarAlarmed = false;
     dronePIRDetected = false;
+    allowNewOperations = true;
 
     this-> reset();
     pHW->getDoorMotor()->on();
@@ -249,6 +250,15 @@ void DroneHangar::setAlarm() {
     pHW->getActionLed()->switchOff();
     pHW->getAlarmLed()->switchOn();
 }
+
+void DroneHangar::setAllowNewOperations(bool allowed) {
+    this->allowNewOperations = allowed;
+}
+
+bool DroneHangar::isNewOperationAllowed() {
+    return this->allowNewOperations;
+}
+
 
 //private methods
 
