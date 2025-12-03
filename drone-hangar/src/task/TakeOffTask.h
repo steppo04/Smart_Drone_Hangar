@@ -14,6 +14,7 @@ class TakeOffTask : public Task {
 
   private:
     enum State {
+        IDLE,
         PREPARING,
         TAKING_OFF,
         COMPLETED
@@ -21,10 +22,7 @@ class TakeOffTask : public Task {
     DroneHangar* hangar;
     State state;
     unsigned long stateStartTime;
-    unsigned long lastToggleTimeL2;
-    unsigned long currentTimeL2;
     bool justEntered;
-    bool led2State;
 
     void setState(State newState);
     void blinkL2();

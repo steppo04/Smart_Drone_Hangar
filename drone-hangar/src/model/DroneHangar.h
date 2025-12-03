@@ -25,9 +25,7 @@ class DroneHangar {
 
     //actuators
     void openDoor();
-    void stopOpeningDoor();
     void closeDoor();
-    void stopClosingDoor();
     void activateDoor();
     void deactivateDoor();
 
@@ -42,6 +40,7 @@ class DroneHangar {
     bool isHangarAlarmed();
 
     //other
+    void blinkLed();
     void reset();
     void setPreAlarm();
     void setAlarm();

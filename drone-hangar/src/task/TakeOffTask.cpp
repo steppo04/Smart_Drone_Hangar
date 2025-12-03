@@ -1,7 +1,6 @@
 #include "task/TakeOffTask.h"
 
-#define D1_EXIT_DISTANCE_CM 50 
-#define T1_EXIT_TIME_SEC 3
+#define T1_EXIT_TIME 15000  // max time allowed for drone to exit hangar in ms
 
 TakeOffTask::TakeOffTask(DroneHangar* hangar, UserPanel* panel, Dashboard* dashboard) {
     this->hangar = hangar;
@@ -10,25 +9,6 @@ TakeOffTask::TakeOffTask(DroneHangar* hangar, UserPanel* panel, Dashboard* dashb
     this->state = PREPARING;
     this->stateStartTime = 0;
     this->justEntered = true;
-    this->lastToggleTimeL2 = 0;
-    this->led2State = false;
-    this->currentTimeL2 = millis();
-}
-
-void TakeOffTask::blinkL2() {
-    static unsigned long lastToggleTime = 0;
-    static bool ledState = false;
-    unsigned long currentTime = millis();
-    
-    if (currentTime - lastToggleTime >= 500) {
-        ledState = !ledState;
-        if (ledState) {
-            hangar->pHW->getActionLed()->switchOn();
-        } else {
-            hangar->pHW->getActionLed()->switchOff();
-        }
-        lastToggleTime = currentTime;
-    }
 }
 
 void TakeOffTask::setState(State newState) {
@@ -50,69 +30,52 @@ unsigned long TakeOffTask::elapsedTimeInState() {
 }
 
 void TakeOffTask::tick() {
-    this->blinkL2();
+    this->hangar->blinkLed();
 
     switch (state) {
-        case PREPARING: {
-            // Stato iniziale: la task è in attesa di essere attivata esternamente.
-            // Quando la richiesta di decollo arriva (es. tramite seriale),
-            // il codice che riceve il messaggio DEVE chiamare un metodo (es. startTakeOff())
-            // sulla task, che a sua volta chiamerà setState(PREPARING).
-            // La Task non fa nulla finché non viene attivata.
-            /*if (checkAndSetJustEntered()) {
-                // Azioni all'ingresso dello stato PREPARING
+        this->hangar->sync();
+        this->dashboard->sync();
+        this->dashboard->notifyNewState();
+
+        case IDLE: {
+            if(checkAndSetJustEntered()) {
+                Logger.log("[TO]: IDLE state entered.");
+            } else if (dashboard->checkAndResetTakeOffRequest()) {
+                setState(PREPARING);
             }
-            
-            // Si passa immediatamente a TAKING_OFF (l'apertura è un'azione istantanea per la FSM)
-            setState(TAKING_OFF);*/
+            break;
+        }
+
+        case PREPARING: {
+            if(checkAndSetJustEntered()) {
+                Logger.log("[TO]: PREPARING state entered.");
+                hangar->openDoor();
+                panel->displayTakeOff();
+            }
             break;
         }
 
         case TAKING_OFF: {
-            /*// Logica di permanenza: Attendere che il drone esca.
-            int distance = this->hangar->getDroneDistanceDetector()->getDistance();
-            
-            if (distance > D1_EXIT_DISTANCE_CM) {
-                // Il drone è "lontano", si inizia a contare il tempo T1
-                if (checkAndSetJustEntered()) {
-                    // Si è appena superata la distanza D1, si riparte con il conteggio
-                    this->stateStartTime = millis(); 
-                    this->justEntered = false; // Mantenere justEntered a false
-                }
-                
-                if (elapsedTimeInState() >= T1_EXIT_TIME_SEC * 1000) {
-                    // Tempo T1 trascorso: il drone è uscito.
+            if(checkAndSetJustEntered()) {
+                Logger.log("[TO]: TAKING_OFF state entered.");
+            } else {
+                bool distanceOk = hangar-> isDroneOutside();
+                bool timeOk = elapsedTimeInState() > T1_EXIT_TIME;
+                if (distanceOk || timeOk) {
                     setState(COMPLETED);
                 }
-            } else {
-                // Il drone è rientrato (o non è ancora uscito stabilmente).
-                // Si resetta il contatore T1, si torna alla condizione di attesa.
-                this->stateStartTime = millis();
-                this->justEntered = true;
             }
-            
-            // Controlli di allarme: se è attivo l'allarme Temp2, si forzano le chiusure.
-            if (this->hangar->isAlarm()) {
-                // La specifica dice: se un take-off è già in corso, è consentito completare,
-                // ma in caso di ALLARME (Temp2 > T4) la porta DEVE essere chiusa.
-                this->hangar->getHangarDoor()->close();
-                // NON cambiamo stato in ALARM, ma lo completiamo, passando il controllo.
-            }*/
             break;
         }
 
         case COMPLETED: {
-            /*if (checkAndSetJustEntered()) {
-                // Azioni all'ingresso dello stato COMPLETED
-                this->hangar->getHangarDoor()->close();
-                this->panel->displayMessage("DRONE OUT");
-                this->hangar->setTakeOffInProgress(false);
-                this->hangar->setDroneInside(false); // Stato globale: Drone OUT
-                this->panel->getL1()->switchOff(); // L1 deve essere spento quando il drone è fuori
-                
-                // La Task deve autosospendersi (tornare a INIT)
-                setState(INIT);
-            }*/
+            if(checkAndSetJustEntered()) {
+                Logger.log("[TO]: COMPLETED state entered.");
+                hangar->closeDoor();
+                hangar->deactivateDoor();
+                panel->displayDroneOut();
+            }
+            setState(IDLE);
             break;
         }
     }
