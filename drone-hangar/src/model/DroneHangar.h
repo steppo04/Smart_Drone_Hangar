@@ -61,5 +61,9 @@ class DroneHangar {
     bool hangarPreAlarm;
     bool isHangarOk;
     bool allowNewOperations;
+
+    unsigned long lastToggleTimeL2;
+    unsigned long currentTimeL2;
+    bool led2State;
 };
 #endif

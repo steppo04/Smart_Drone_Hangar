@@ -19,6 +19,10 @@ void DroneHangar::init() {
     hangarAlarmed = false;
     dronePIRDetected = false;
     allowNewOperations = true;
+    
+    lastToggleTimeL2 = 0;
+    led2State = false;
+    currentTimeL2 = millis();
 
     this->reset();
     pHW->getDoorMotor()->on();
