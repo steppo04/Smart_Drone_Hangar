@@ -21,5 +21,5 @@
 #define T3_MILLIS 5000
 #define TEMP2 60 
 #define T4_MILLIS 10000
-
+#define BLINK_PERIOD_MS 500
 #endif

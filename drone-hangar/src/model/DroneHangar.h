@@ -40,6 +40,8 @@ class DroneHangar {
     bool isHangarAlarmed();
 
     //other
+    void startBlinkLed();
+    void stopBlinkLed();
     void blinkLed();
     void reset();
     void setPreAlarm();

@@ -258,7 +258,7 @@ bool DroneHangar::isNewOperationAllowed() {
 
 void DroneHangar::blinkLed() {
     currentTimeL2 = millis();
-    if (currentTimeL2 - lastToggleTimeL2 >= 500) {
+    if (currentTimeL2 - lastToggleTimeL2 >= BLINK_PERIOD_MS) {
         led2State = !led2State;
         if (led2State) {
             pHW->getActionLed()->switchOn();
@@ -267,6 +267,16 @@ void DroneHangar::blinkLed() {
         }
         lastToggleTimeL2 = currentTimeL2;
     }
+}
+void DroneHangar::startBlinkLed() {
+    lastToggleTimeL2 = millis();
+    led2State = true;
+    pHW->getActionLed()->switchOn();
+}
+
+void DroneHangar::stopBlinkLed() {
+    pHW->getActionLed()->switchOff();
+    led2State = false;
 }
 
 
