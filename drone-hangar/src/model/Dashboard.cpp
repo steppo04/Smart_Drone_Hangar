@@ -40,11 +40,11 @@ void Dashboard::sync() {
 
             String content = msg->getContent();
 
-            if (content == "takeoff") {
+            if (content == "cmd:takeoff") {
                 takeOffCmdRequested = true;
-            } else if (content == "landing") {
+            } else if (content == "cmd:landing") {
                 landingCmdRequested = true;
-            } else if (content == "reset") {
+            } else if (content == "cmd:reset") {
                 resetAlarmRequested = true;
             }
 

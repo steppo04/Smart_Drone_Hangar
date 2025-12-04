@@ -3,8 +3,6 @@
 
 #define D1 100.0  // distance threshold for drone detection in cm
 #define D2 30.0   // distance threshold for drone inside hangar in cm
-#define TEMP1 30.0   // temperature threshold for high temperature in degree Celsius
-#define TEMP2 40.0   // temperature threshold for very high temperature in degree Celsius
 
 
 DroneHangar::DroneHangar(HWPlatform* hw) {
@@ -19,11 +17,9 @@ void DroneHangar::init() {
     hangarAlarmed = false;
     dronePIRDetected = false;
     allowNewOperations = true;
-    
     lastToggleTimeL2 = 0;
     led2State = false;
     currentTimeL2 = millis();
-
     this->reset();
     pHW->getDoorMotor()->on();
     pHW->getStartLed()->switchOn();
@@ -72,15 +68,11 @@ bool DroneHangar::isInAlarm() {
 
 //actuators
 void DroneHangar::openDoor() {
-    if(isHangarOk) {
-        pHW->getDoorMotor()->on();
-        pHW->getDoorMotor()->setPosition(180);
-    }
+    pHW->getDoorMotor()->setPosition(180);
 }
 
 void DroneHangar::closeDoor() {
-    pHW->getDoorMotor()->on();
-    pHW->getDoorMotor()->setPosition(0);
+    pHW->getDoorMotor()->setPosition(90);
 }
 
 void DroneHangar::activateDoor() {
@@ -194,14 +186,6 @@ void DroneHangar::sync() {
 }
 
 //internal data accessors
-float DroneHangar::getTemperature() {
-    return temperature;
-}
-
-float DroneHangar::getDroneDistance() {
-    return droneDistance;
-}
-
 bool DroneHangar::isDroneDetected() {
     return dronePIRDetected;
 }
@@ -239,6 +223,7 @@ void DroneHangar::setAlarm() {
     hangarPreAlarm = false;
     isHangarOk = false;
 
+    activateDoor();
     closeDoor();
 
     // LED

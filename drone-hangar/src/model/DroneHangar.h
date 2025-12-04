@@ -1,6 +1,5 @@
 #ifndef DRONEHANGAR_H
 #define DRONEHANGAR_H
-#include "Dashboard.h"
 #include <Arduino.h>
 #include "config.h"
 #include "HWPlatform.h"
@@ -33,8 +32,6 @@ class DroneHangar {
     void sync();
 
     //internal data accessors
-    float getTemperature();
-    float getDroneDistance();
     bool isDroneDetected();
     bool isHangarPreAlarm();
     bool isHangarAlarmed();
@@ -54,7 +51,6 @@ class DroneHangar {
     bool sensorsCanBeUsed();
     String stateToString();
 
-    Dashboard* pDashboard;
     HWPlatform* pHW;
     bool dronePIRDetected;
     float droneDistance;

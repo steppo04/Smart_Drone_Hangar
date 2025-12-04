@@ -5,10 +5,9 @@
 #define LED_ACTION_PIN 12
 #define LED_ALARM_PIN 13
 
-#define BT_RESET_PIN 2
+#define BT_RESET_PIN 4
 
-#define TEMP_SENSOR_PIN 3
-#define LED_START_PIN 11
+#define TEMP_SENSOR_PIN A2
 
 #define PIR_PIN 2
 
@@ -21,5 +20,5 @@
 #define T3_MILLIS 5000
 #define TEMP2 60 
 #define T4_MILLIS 10000
-#define BLINK_PERIOD_MS 500
+#define BLINK_PERIOD_MS 1000
 #endif

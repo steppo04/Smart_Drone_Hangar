@@ -2,7 +2,7 @@
 #define TAKEOFFTASK_H
 
 #include <Arduino.h>
-#include "task/Task.h"
+#include "kernel/Task.h"
 #include "model/DroneHangar.h"
 #include "model/UserPanel.h"
 #include "model/Dashboard.h"
@@ -16,10 +16,14 @@ class TakeOffTask : public Task {
     enum State {
         IDLE,
         PREPARING,
+        OPENING_DOOR,
         TAKING_OFF,
+        CLOSING_DOOR,
         COMPLETED
     };
     DroneHangar* hangar;
+    UserPanel* panel;
+    Dashboard* dashboard;
     State state;
     unsigned long stateStartTime;
     bool justEntered;
@@ -28,5 +32,7 @@ class TakeOffTask : public Task {
     void blinkL2();
     bool checkAndSetJustEntered();
     unsigned long elapsedTimeInState();
+    void log(const String& msg);
     
 };
+#endif // TAKEOFFTASK_H

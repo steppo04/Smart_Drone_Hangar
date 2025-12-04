@@ -15,9 +15,11 @@ class DashboardLauncher   {
 		view = new DashboardView();
 		log = new LogView();
 		
-		String portName = "/dev/cu.usbmodem212101"; // da modificare in base al nome della porta da controllare su arduino
+		String portName = "COM9";
 		DashboardController contr = new DashboardController(portName,view,log);
 		view.registerController(contr);
+		view.updateControlsState(MonitoringAgent.STATE_REST, MonitoringAgent.HANGAR_NORMAL);
+
 		
 		view.display();
 		log.display();

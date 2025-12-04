@@ -1,4 +1,4 @@
-#include "LandingTask.h"
+/*#include "LandingTask.h"
 #include <Arduino.h>
 #include "config.h"
 #include "kernel/Logger.h"
@@ -43,7 +43,7 @@ void LandingTask::tick() {
         case DOOR_OPENING:
             if (elapsedTimeInState() >= DOOR_TIME) {
                 Logger.log("Door opened, landing drone");
-                pDroneHangar->stopOpeningDoor();
+                //pDroneHangar->stopOpeningDoor();
                 t2TimerActive = false;
                 
                 setState(LANDING);
@@ -72,7 +72,7 @@ void LandingTask::tick() {
             if (elapsedTimeInState() >= DOOR_TIME) {
                 Logger.log("Door closed, drone inside hangar.");
                 
-                pDroneHangar->stopClosingDoor(); 
+                //pDroneHangar->stopClosingDoor(); 
                 pDroneHangar->stopBlinkLed();
                 
                 setState(DRONE_INSIDE);
@@ -83,4 +83,4 @@ void LandingTask::tick() {
              pPanel->displayDroneInside();
             break;
     }
-}
+}*/

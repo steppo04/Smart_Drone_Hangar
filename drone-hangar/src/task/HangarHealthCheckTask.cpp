@@ -1,6 +1,6 @@
-#include "HangarHealthCheckTask.h"
+/*#include "HangarHealthCheckTask.h"
 #include "model/DroneHangar.h" 
-#include "UserPanel.h"
+#include "model/UserPanel.h"
 #include <Arduino.h>
 #include "kernel/Logger.h"
 
@@ -88,4 +88,4 @@ bool HangarHealthCheckTask::checkAndSetJustEntered() {
         justEntered = false;
     }
     return bak;
-}
+}*/
