@@ -43,6 +43,10 @@ class DroneHangar {
     void reset();
     void setPreAlarm();
     void setAlarm();
+    void setTakeOffInProgress(bool inProgress);
+    bool isTakeOffInProgress();
+    void setLandingInProgress(bool inProgress);
+    bool isLandingInProgress();
 
     void setAllowNewOperations(bool allowed);
     bool isNewOperationAllowed();
@@ -59,7 +63,8 @@ class DroneHangar {
     bool hangarPreAlarm;
     bool isHangarOk;
     bool allowNewOperations;
-
+    bool takeOffInProgress;
+    bool landingInProgress;
     unsigned long lastToggleTimeL2;
     unsigned long currentTimeL2;
     bool led2State;

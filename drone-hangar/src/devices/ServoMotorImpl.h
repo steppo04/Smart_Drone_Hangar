@@ -18,6 +18,7 @@ public:
 private:
   int pin; 
   bool _on;
+  int _angle; // <--- NUOVA VARIABILE PER RICORDARE LA POSIZIONE
   ServoTimer2 motor; 
 };
 

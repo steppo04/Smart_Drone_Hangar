@@ -17,6 +17,8 @@ void DroneHangar::init() {
     hangarAlarmed = false;
     dronePIRDetected = false;
     allowNewOperations = true;
+    takeOffInProgress = false;
+    landingInProgress = false;
     lastToggleTimeL2 = 0;
     led2State = false;
     currentTimeL2 = millis();
@@ -72,7 +74,7 @@ void DroneHangar::openDoor() {
 }
 
 void DroneHangar::closeDoor() {
-    pHW->getDoorMotor()->setPosition(90);
+    pHW->getDoorMotor()->setPosition(0);
 }
 
 void DroneHangar::activateDoor() {
@@ -177,11 +179,10 @@ void DroneHangar::sync() {
         pHW->getAlarmLed()->switchOff();
     }
 
-    //Motor in action --> LED2 (Action led) ON
-    if (pHW->getDoorMotor()->isOn()) {
-        pHW->getActionLed()->switchOn();
+    if(isHangarOk && (takeOffInProgress || landingInProgress)) {
+        blinkLed();
     } else {
-        pHW->getActionLed()->switchOff();
+        stopBlinkLed();
     }
 }
 
@@ -256,14 +257,27 @@ void DroneHangar::blinkLed() {
 void DroneHangar::startBlinkLed() {
     lastToggleTimeL2 = millis();
     led2State = true;
-    pHW->getActionLed()->switchOn();
 }
 
 void DroneHangar::stopBlinkLed() {
-    pHW->getActionLed()->switchOff();
     led2State = false;
 }
 
+void DroneHangar::setTakeOffInProgress(bool inProgress) {
+    this->takeOffInProgress = inProgress;
+}
+
+bool DroneHangar::isTakeOffInProgress() {
+    return this->takeOffInProgress;
+}
+
+void DroneHangar::setLandingInProgress(bool inProgress) {
+    this->landingInProgress = inProgress;
+}
+
+bool DroneHangar::isLandingInProgress() {
+    return this->landingInProgress;
+}
 
 //private methods
 

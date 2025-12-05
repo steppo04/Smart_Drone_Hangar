@@ -3,7 +3,7 @@
 
 #define T1_EXIT_TIME 15000  // max time allowed for drone to exit hangar in ms
 #define DOOR_TIME  5000     // time to open/close door in ms
-#define COMPLETED_WAIT 2000 // tempo di attesa nello stato completed prima di reset
+#define COMPLETED_WAIT 10000 // tempo di attesa nello stato completed prima di reset
 
 TakeOffTask::TakeOffTask(DroneHangar* hangar, UserPanel* panel, Dashboard* dashboard) {
     this->hangar = hangar;
@@ -33,11 +33,6 @@ unsigned long TakeOffTask::elapsedTimeInState() {
 }
 
 void TakeOffTask::tick() {
-    // Gestione lampeggio LED
-    if (state == PREPARING || state == TAKING_OFF || state == COMPLETED) {
-        hangar->blinkLed();
-    }
-    
     // Sincronizzazione Hangar e Dashboard
     this->hangar->sync();
     this->dashboard->sync();
@@ -57,6 +52,7 @@ void TakeOffTask::tick() {
         case PREPARING: {
             if(checkAndSetJustEntered()) {
                 Logger.log(F("[TO]: PREPARING state entered."));
+                hangar->setTakeOffInProgress(true);
                 hangar->startBlinkLed();
                 panel->displayTakeOff();
             }
@@ -69,10 +65,8 @@ void TakeOffTask::tick() {
             if(checkAndSetJustEntered()) {
                 Logger.log(F("[TO]: OPENING_DOOR state entered."));
                 hangar->activateDoor(); // Motore ON
-            }
-            
-            // Sicurezza: ribadiamo la posizione ad ogni ciclo (o almeno la prima volta)
-            // Farlo continuamente assicura che il servo raggiunga la posizione     
+                hangar->openDoor();
+            }  
             
             if (elapsedTimeInState() > DOOR_TIME) {
                 hangar->deactivateDoor(); // Motore OFF per risparmiare energia e attivare sensori
@@ -85,16 +79,11 @@ void TakeOffTask::tick() {
         case TAKING_OFF: {
             if(checkAndSetJustEntered()) {
                 Logger.log(F("[TO]: TAKING_OFF state entered. Sensors Active."));
-            } 
-            
-            // NOTA: Qui il motore è OFF, quindi sensorsCanBeUsed() è TRUE e sync() aggiorna le distanze.
+            }
             bool distanceOk = hangar->isDroneOutside();
             bool timeOk = elapsedTimeInState() > T1_EXIT_TIME;
             
-            if (distanceOk) {
-                Logger.log(F("[TO]: Drone detected OUTSIDE. Closing door."));
-                setState(CLOSING_DOOR);
-            } else if (timeOk) {
+            if (/*distanceOk &&*/timeOk) {
                 Logger.log(F("[TO]: Timeout reached (15s). Force closing door."));
                 setState(CLOSING_DOOR);
             }
@@ -105,14 +94,12 @@ void TakeOffTask::tick() {
             if(checkAndSetJustEntered()) {
                 Logger.log(F("[TO]: CLOSING_DOOR state entered."));
                 hangar->activateDoor(); // Motore ON
+                hangar->closeDoor(); 
             }
-            // FIX CRUCIALE: Chiamiamo closeDoor() continuamente, non solo all'ingresso.
-            // Se il servo ha perso il primo comando all'accensione, questo lo corregge.
-            hangar->closeDoor(); 
             
             if (elapsedTimeInState() > DOOR_TIME) {
-                Logger.log(F("[TO]: Door closed. Operation completed."));
                 hangar->deactivateDoor(); // Motore OFF
+                Logger.log(F("[TO]: Door closed. Operation completed."));
                 setState(COMPLETED);
             }
             break;
@@ -121,6 +108,7 @@ void TakeOffTask::tick() {
         case COMPLETED: {
             if(checkAndSetJustEntered()) {
                 Logger.log(F("[TO]: COMPLETED state entered."));
+                hangar->setTakeOffInProgress(false);
                 panel->displayDroneOut();
                 hangar->stopBlinkLed();
             }
