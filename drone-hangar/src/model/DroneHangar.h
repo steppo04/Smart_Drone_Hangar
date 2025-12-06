@@ -21,6 +21,7 @@ class DroneHangar {
     bool isDroneOutside();
     bool isInPreAlarm();
     bool isInAlarm();
+    int getDroneStateCode();
 
     //actuators
     void openDoor();
@@ -47,6 +48,7 @@ class DroneHangar {
     bool isTakeOffInProgress();
     void setLandingInProgress(bool inProgress);
     bool isLandingInProgress();
+    int getHangarStateCode();
 
     void setAllowNewOperations(bool allowed);
     bool isNewOperationAllowed();
@@ -68,5 +70,6 @@ class DroneHangar {
     unsigned long lastToggleTimeL2;
     unsigned long currentTimeL2;
     bool led2State;
+    float filteredDistance;
 };
 #endif

@@ -15,21 +15,21 @@ void Dashboard::init() {
 }
 
 void Dashboard::notifyNewState() {
-    String st;
-    if (pHangar->isHangarAlarmed()) {
-        st = "2";            // ALARM
-    } else if (pHangar->isHangarPreAlarm()) {
-        st = "1";            // PRE-ALARM
-    } else {
-        st = "0";            // OK
-    }
-
+    // 1. Recupera TUTTI e 4 i dati
+    int droneState = pHangar->getDroneStateCode();
     float droneDist = pHangar->getDroneDistance();
     float temp = pHangar->getTemperature();
+    int hangarState = pHangar->getHangarStateCode(); // <--- NUOVO DATO
 
-    MsgService.sendMsg(String("dh:st:") + st + ":" +
-                       String(droneDist).substring(0,5) + ":" +
-                       String(temp).substring(0,5));
+    // 2. Costruisci il messaggio con 4 parti
+    // Formato: dh:st:STATO_DRONE:DISTANZA:TEMP:STATO_HANGAR
+    String msg = "dh:st:" + 
+                 String(droneState) + ":" + 
+                 String(droneDist, 1) + ":" + 
+                 String(temp, 1) + ":" + 
+                 String(hangarState); // <--- AGGIUNTO ALLA FINE
+
+    MsgService.sendMsg(msg);
 }
 
 void Dashboard::sync() {

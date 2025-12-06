@@ -10,6 +10,7 @@ DroneHangar::DroneHangar(HWPlatform* hw) {
 }
 
 void DroneHangar::init() {
+    filteredDistance = 0.0;
     temperature = 20.0;
     droneDistance = 10.0;
     isHangarOk = true;
@@ -86,29 +87,35 @@ void DroneHangar::deactivateDoor() {
 }
 
 void DroneHangar::sync() {
-    float dist = droneDistance;
     float temp = temperature;
     bool droneDetected = dronePIRDetected;
 
     if (sensorsCanBeUsed()) {
 
-        dist = pHW->getDetectorSonar()->getDistance();
-        temp = pHW->getTempSensor()->getTemperature();
-        droneDetected = pHW->getDetectorPir()->isDetected();
-
-        if (dist == NO_OBJ_DETECTED) {
-            dist = D1;
+        float NewDist = pHW->getDetectorSonar()->getDistance();
+        float currentTemp = pHW->getTempSensor()->getTemperature();
+        bool currentPir = pHW->getDetectorPir()->isDetected();
+        float inputDist = 0;
+        
+        if (NewDist == NO_OBJ_DETECTED || NewDist <= 0 ) { // Se non rileva nulla, fingiamo sia a 200cm
+            inputDist = 200.0;
+        } else {// Se vede qualcosa, usiamo il dato reale  
+            inputDist = NewDist;
         }
 
-        droneDistance = dist;
-        temperature = temp;
-        dronePIRDetected = droneDetected;
+        //applichiamo il filtro in modo di attenuare il jittering causato dal continuo aggiornamento 
+        float alpha = 0.1;
+        filteredDistance = (alpha * inputDist) + ((1.0 - alpha) * filteredDistance);
+
+        droneDistance = filteredDistance;
+        temperature = currentTemp;
+        dronePIRDetected = currentPir;
     }
 
     static unsigned long counter = 0;
     counter++;
     if (counter % 30 == 0) {
-        Logger.log("[DH] dist=" + String(dist) +
+        Logger.log("[DH] dist=" + String(droneDistance) +
                    " temp=" + String(temp) +
                    " pir=" + String(droneDetected) +
                    " state=" + stateToString());
@@ -279,6 +286,29 @@ bool DroneHangar::isLandingInProgress() {
     return this->landingInProgress;
 }
 
+int DroneHangar::getDroneStateCode() {
+    // Mappatura Stati: 0=REST, 1=TAKEOFF, 2=OUT, 3=LANDING
+    if (takeOffInProgress) {
+        return 1; 
+    } else if (landingInProgress) {
+        return 3;
+    } else if (isDroneInside()) {
+        return 0;
+    } else {
+        return 2; 
+    }
+}
+
+int DroneHangar::getHangarStateCode() {
+    if (isHangarAlarmed()) {
+        return 2; // ALARM
+    } else if (isHangarPreAlarm()) {
+        return 1; // PRE-ALARM
+    } else {
+        return 0; // NORMAL
+    }
+}
+
 //private methods
 
 /*Durante l’apertura o la chiusura, il servo consuma molta corrente e vibra.
@@ -287,16 +317,4 @@ sono sensori sensibili ai disturbi elettrici e meccanici
 generati dal movimento del motore.*/
 bool DroneHangar::sensorsCanBeUsed(){
   return !pHW->getDoorMotor()->isOn();
-}
-
-String DroneHangar::stateToString() {
-    if(isHangarOk) {
-        return "OK";
-    } else if(hangarPreAlarm) {
-        return "PRE-ALARM";
-    } else if(hangarAlarmed) {
-        return "ALARM";
-    } else {
-        return "UNKNOWN";
-    }
 }
