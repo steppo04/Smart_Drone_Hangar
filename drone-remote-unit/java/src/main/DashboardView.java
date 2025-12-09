@@ -5,16 +5,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 public class DashboardView extends JFrame implements ActionListener {
 
-    private DashboardController controller; 
-
-    public static final int HANGAR_NORMAL    = 0;
-    public static final int HANGAR_PREALARM  = 1;
-    public static final int HANGAR_ALARM     = 2;
-
+    private DashboardController controller;
     private JButton btnTakeOff;
     private JButton btnLand;
     
@@ -121,19 +117,19 @@ public class DashboardView extends JFrame implements ActionListener {
     public void updateHangarCondition(int hangarStatus) {
         SwingUtilities.invokeLater(() -> {
             switch (hangarStatus) {
-                case HANGAR_NORMAL:
+                case MonitoringAgent.HANGAR_NORMAL:
                     lblAlarmStatus.setText(" SYSTEM NORMAL ");
                     lblAlarmStatus.setBackground(Color.GREEN);
                     lblAlarmStatus.setForeground(Color.BLACK);
                     break;
 
-                case HANGAR_PREALARM:
+                case MonitoringAgent.HANGAR_PREALARM:
                     lblAlarmStatus.setText(" PRE-ALARM: TEMP HIGH ");
                     lblAlarmStatus.setBackground(Color.ORANGE);
                     lblAlarmStatus.setForeground(Color.BLACK);
                     break;
 
-                case HANGAR_ALARM:
+                case MonitoringAgent.HANGAR_ALARM:
                     lblAlarmStatus.setText(" ALARM ACTIVE - LOCKED ");
                     lblAlarmStatus.setBackground(Color.RED);
                     lblAlarmStatus.setForeground(Color.WHITE);
@@ -149,7 +145,7 @@ public class DashboardView extends JFrame implements ActionListener {
     public void updateControlsState(int droneState, int hangarStatus) {
         SwingUtilities.invokeLater(() -> {
 
-            boolean emergencyActive = (hangarStatus == HANGAR_PREALARM || hangarStatus == HANGAR_ALARM);
+            boolean emergencyActive = (hangarStatus == MonitoringAgent.HANGAR_PREALARM || hangarStatus == MonitoringAgent.HANGAR_ALARM);
 
             if (emergencyActive) {
                 btnTakeOff.setEnabled(false);
