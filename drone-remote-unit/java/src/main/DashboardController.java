@@ -4,7 +4,7 @@ public class DashboardController {
 
     
     private static final String CMD_TAKEOFF = "cmd:takeoff";
-    private static final String CMD_LAND    = "cmd:land";
+    private static final String CMD_LAND    = "cmd:landing";
     
     private SerialCommChannel channel;
     private DashboardView view;

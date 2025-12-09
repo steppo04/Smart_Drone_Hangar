@@ -11,10 +11,10 @@ class LogView extends JFrame  {
 
 	public LogView(){
 		super("Log ");
-		setSize(600,600);
+		setSize(800,800);
 		this.setResizable(false);
 		JPanel mainPanel = new JPanel();
-		log = new JTextArea(30,40);
+		log = new JTextArea(50,60);
 		log.setEditable(false);
 		JScrollPane scrol = new JScrollPane(log);
 		mainPanel.add(scrol);
