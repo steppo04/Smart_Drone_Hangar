@@ -318,3 +318,18 @@ generati dal movimento del motore.*/
 bool DroneHangar::sensorsCanBeUsed(){
   return !pHW->getDoorMotor()->isOn();
 }
+
+
+String DroneHangar::stateToString() {
+    String state = "";
+    if (isHangarOk) {
+        state = "OK";
+    } else if (hangarPreAlarm) {
+        state = "PRE-ALARM";
+    } else if (hangarAlarmed) {
+        state = "ALARM";
+    } else {
+        state = "UNKNOWN";
+    }
+    return state;
+}

@@ -18,8 +18,9 @@ class TakeOffTask : public Task {
         PREPARING,
         OPENING_DOOR,
         TAKING_OFF,
+        TIMING,
         CLOSING_DOOR,
-        COMPLETED
+        DRONE_OUT
     };
     DroneHangar* hangar;
     UserPanel* panel;
