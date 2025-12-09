@@ -209,6 +209,15 @@ bool DroneHangar::isHangarAlarmed() {
 //other
 void DroneHangar::reset() {
     isHangarOk = true;
+    hangarPreAlarm = false;
+    hangarAlarmed = false;
+    dronePIRDetected = false;
+    allowNewOperations = true;
+    takeOffInProgress = false;
+    landingInProgress = false;
+    lastToggleTimeL2 = 0;
+    led2State = false;
+    currentTimeL2 = millis();
     pHW->getStartLed()->switchOn();
     pHW->getActionLed()->switchOff();
     pHW->getAlarmLed()->switchOff();

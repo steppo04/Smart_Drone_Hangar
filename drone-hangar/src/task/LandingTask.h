@@ -4,35 +4,34 @@
 #include "kernel/Task.h"
 #include "model/DroneHangar.h"
 #include "model/UserPanel.h"
+#include <model/Dashboard.h>
 
 class LandingTask : public Task {
 
 public:
-    LandingTask(DroneHangar* hangar, UserPanel* panel);
+    LandingTask(DroneHangar* hangar, UserPanel* panel, Dashboard* dashboard);
     void tick();
 
 private:
-    void setState(int state);
-    long elapsedTimeInState();
-    void log(const String& msg);
-    bool checkAndSetJustEntered();
-
-    enum { 
+    enum State { 
         WAITING_FOR_LANDING, 
         DOOR_OPENING, 
         LANDING, 
+        TIMING,
         DOOR_CLOSING, 
         DRONE_INSIDE 
-    } state;
+    };
 
-    long stateTimestamp;
-    bool justEntered;
+    void setState(State state);
+    unsigned long elapsedTimeInState();
+    bool checkAndSetJustEntered();
 
-    DroneHangar* pDroneHangar;
+    State state;
+    DroneHangar* hangar;
+    Dashboard* dashboard;
     UserPanel* pPanel;
-
-    unsigned long t2StartTime;  // Timestamp di quando il drone entra nel raggio D2
-    bool t2TimerActive;         // Flag per sapere se stiamo contando il tempo T2
+    unsigned long stateStartTime;
+    bool justEntered;
 
 };
 

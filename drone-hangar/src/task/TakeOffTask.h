@@ -15,7 +15,7 @@ class TakeOffTask : public Task {
   private:
     enum State {
         IDLE,
-        PREPARING,
+        PREPARING_TAKEOFF,
         OPENING_DOOR,
         TAKING_OFF,
         TIMING,
@@ -30,10 +30,8 @@ class TakeOffTask : public Task {
     bool justEntered;
 
     void setState(State newState);
-    void blinkL2();
     bool checkAndSetJustEntered();
     unsigned long elapsedTimeInState();
-    void log(const String& msg);
     
 };
 #endif // TAKEOFFTASK_H

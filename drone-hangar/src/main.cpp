@@ -8,6 +8,7 @@
 #include "model/Dashboard.h"
 #include "model/DroneHangar.h"
 #include "task/TakeOffTask.h"
+#include "task/LandingTask.h"
 
 // #define __TESTING_HW__
 
@@ -40,7 +41,11 @@ void setup() {
   Task* pTakeOffTask = new TakeOffTask(pDroneHangar, pUserPanel, pDashboard);
   pTakeOffTask->init(50);
 
+  Task* pLandingTask = new LandingTask(pDroneHangar, pUserPanel, pDashboard);
+  pLandingTask->init(50);
+
   sched.addTask(pTakeOffTask);
+  sched.addTask(pLandingTask);
 #endif
 
 #ifdef __TESTING_HW__

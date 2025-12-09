@@ -1,9 +1,8 @@
 #include "task/TakeOffTask.h"
 #include "kernel/Logger.h"
 
-#define T1_EXIT_TIME 15000  // max time allowed for drone to exit hangar in ms
+#define T1_EXIT_TIME 10000  // max time allowed for drone to exit hangar in ms
 #define DOOR_TIME  5000     // time to open/close door in ms
-#define COMPLETED_WAIT 10000 // tempo di attesa nello stato completed prima di reset
 
 TakeOffTask::TakeOffTask(DroneHangar* hangar, UserPanel* panel, Dashboard* dashboard) {
     this->hangar = hangar;
@@ -33,7 +32,6 @@ unsigned long TakeOffTask::elapsedTimeInState() {
 }
 
 void TakeOffTask::tick() {
-    // Sincronizzazione Hangar e Dashboard
     this->hangar->sync();
     this->dashboard->sync();
     this->dashboard->notifyNewState();
@@ -44,12 +42,12 @@ void TakeOffTask::tick() {
                 Logger.log(F("[TO]: IDLE state entered. Waiting for command."));
                 panel->displayDroneInside();
             } else if (dashboard->checkAndResetTakeOffRequest()) {
-                setState(PREPARING);
+                setState(PREPARING_TAKEOFF);
             }
             break;
         }
 
-        case PREPARING: {
+        case PREPARING_TAKEOFF: {
             if(checkAndSetJustEntered()) {
                 Logger.log(F("[TO]: PREPARING state entered."));
                 hangar->setTakeOffInProgress(true);
@@ -78,11 +76,12 @@ void TakeOffTask::tick() {
 
         case TAKING_OFF: {
             if(checkAndSetJustEntered()) {
-                Logger.log(F("[TO]: TAKING_OFF state entered. Sensors Active."));
+                Logger.log(F("[TO]: TAKING_OFF state entered."));
             }
             bool distanceOk = hangar->isDroneOutside();
             
             if (distanceOk) {
+                Logger.log(F("[TO]: Start timing for closing door"));
                 setState(TIMING);
             }
             break;
@@ -118,26 +117,11 @@ void TakeOffTask::tick() {
                 panel->displayDroneOut();
                 hangar->stopBlinkLed();
             } else if (dashboard->checkAndResetLandingRequest()) {
-                //setState(LANDING);
-                //ESEMPIO:
                 hangar->setLandingInProgress(true);
-                if(hangar->isDroneInside()) {
-                    Logger.log(F("[TO]: Drone is back inside, transitioning to IDLE."));
-                    setState(IDLE);
-                }
+            } else if(hangar->isTakeOffInProgress()) {
+                setState(PREPARING_TAKEOFF);
             }
             break;
         }
-
-        /*case LANDING: {
-            if(checkAndSetJustEntered()) {
-                Logger.log(F("[TO]: LANDING state entered."));
-            }
-            if(hangar->isDroneDetected()) {
-                Logger.log(F("[TO]: Drone landing detected, transitioning to IDLE."));
-                setState(IDLE);
-            }
-            break;
-        }*/
     }
 }
