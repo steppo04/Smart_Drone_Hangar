@@ -41,7 +41,7 @@ void UserPanel::displayDroneOut() {
 void UserPanel::displayAlarm() {
     pLcd->clear();
     pLcd->setCursor(0, 0); 
-    pLcd->print("!!!!! ALARM !!!!!");
+    pLcd->print("ALARM STATE");
 }
 
 void UserPanel::sync() {

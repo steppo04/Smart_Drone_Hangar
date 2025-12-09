@@ -277,6 +277,7 @@ void DroneHangar::startBlinkLed() {
 
 void DroneHangar::stopBlinkLed() {
     led2State = false;
+    pHW->getActionLed()->switchOff();
 }
 
 void DroneHangar::setTakeOffInProgress(bool inProgress) {

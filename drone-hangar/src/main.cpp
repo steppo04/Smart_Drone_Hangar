@@ -9,8 +9,7 @@
 #include "model/DroneHangar.h"
 #include "task/TakeOffTask.h"
 #include "task/LandingTask.h"
-
-// #define __TESTING_HW__
+#include "task/HangarHealthCheckTask.h"
 
 Scheduler sched;
 
@@ -44,15 +43,12 @@ void setup() {
   Task* pLandingTask = new LandingTask(pDroneHangar, pUserPanel, pDashboard);
   pLandingTask->init(50);
 
+  Task* pHangarHealthCheckTask = new HangarHealthCheckTask(pDroneHangar, pUserPanel);
+  pHangarHealthCheckTask->init(200);
+
   sched.addTask(pTakeOffTask);
   sched.addTask(pLandingTask);
-#endif
-
-#ifdef __TESTING_HW__
-  /* Testing */
-  Task* pTestHWTask = new TestHWTask(pHWPlatform);
-  pTestHWTask->init(1000);
-  sched.addTask(pTestHWTask);
+  sched.addTask(pHangarHealthCheckTask);
 #endif
 }
 

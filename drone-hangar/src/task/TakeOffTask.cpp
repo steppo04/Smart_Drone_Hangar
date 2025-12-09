@@ -38,10 +38,12 @@ void TakeOffTask::tick() {
 
     switch (state) {
         case IDLE: {
-            if(checkAndSetJustEntered()) {
+            if(checkAndSetJustEntered() && !hangar->isHangarAlarmed() && !hangar->isHangarPreAlarm()) {
                 Logger.log(F("[TO]: IDLE state entered. Waiting for command."));
                 panel->displayDroneInside();
-            } else if (dashboard->checkAndResetTakeOffRequest()) {
+            } else if (hangar->isHangarPreAlarm() || hangar->isHangarAlarmed()) {
+                hangar->setLandingInProgress(false);
+            }else if (dashboard->checkAndResetTakeOffRequest()) {
                 setState(PREPARING_TAKEOFF);
             }
             break;

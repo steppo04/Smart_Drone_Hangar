@@ -16,9 +16,9 @@
 
 #define MOTOR_PIN 9
 
-#define TEMP1 40 
+#define TEMP1 31
 #define T3_MILLIS 5000
-#define TEMP2 60 
+#define TEMP2 33
 #define T4_MILLIS 10000
 #define BLINK_PERIOD_MS 1000
 #endif

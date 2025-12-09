@@ -3,7 +3,7 @@
 
 #include "kernel/Task.h"
 #include "model/DroneHangar.h"
-#include "UserPanel.h"
+#include "model/UserPanel.h"
 
 class HangarHealthCheckTask : public Task {
     public:

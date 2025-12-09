@@ -1,4 +1,4 @@
-/*#include "HangarHealthCheckTask.h"
+#include "HangarHealthCheckTask.h"
 #include "model/DroneHangar.h" 
 #include "model/UserPanel.h"
 #include <Arduino.h>
@@ -20,7 +20,11 @@ void HangarHealthCheckTask::tick() {
                 if (this->checkAndSetJustEntered()){
                     Logger.log("[HCH] Normal");
                     pHangar->reset(); 
-                    pUserPanel->displayDroneInside(); 
+                    if(pHangar -> isDroneInside()) {
+                        pUserPanel->displayDroneInside();
+                    } else if (pHangar -> isDroneOutside()) {
+                        pUserPanel->displayDroneOut();
+                    }
                 }
                 if (pHangar->isTempHigh()) { // T >= TEMP1
                     setState(PREALARM);
@@ -31,14 +35,12 @@ void HangarHealthCheckTask::tick() {
             case PREALARM: { 
                 if (this->checkAndSetJustEntered()){
                     Logger.log("[HCH] Pre-Alarm: new operations suspended.");
-                    pHangar->setPreAlarm()// Deve impostare i LED di PRE-ALARM (L1, L2, L3 OFF
+                    pHangar->setPreAlarm();// Deve impostare i LED di PRE-ALARM (L1, L2, L3 OFF)
                 }
                 if (pHangar->isTempOk()) { // T < TEMP1 
                      setState(NORMAL);
-                } 
-            // Condizione 2: Temperatura molto alta o tempo di PRE-ALARM scaduto (passaggio ad ALARM)
-                else if (pHangar->isTempVeryHigh() || // T >= TEMP2 
-                    elapsedTimeInState() > T4_MILLIS ) {//??
+                }
+                else if (pHangar->isTempVeryHigh() || elapsedTimeInState() > T4_MILLIS ) {
                     setState(ALARM);
             }
             break;
@@ -47,28 +49,20 @@ void HangarHealthCheckTask::tick() {
             case ALARM: {
                 if (this->checkAndSetJustEntered()){
                     Logger.log(F("[HCH] CRITICAL ALARM. Reset needed."));
-                    // 1. Chiudere la porta HD (se aperta)
-                    pHangar->reset();
+                    //chiusura porta (se aperta) TO DO
                     pUserPanel->displayDroneInside();
-                    // 2. Accendere L3
-                    pHangar->setLedL3(true); 
-                    // 3. LCD: ALARM
-                    pHangar->setLcdMessage(F("ALARM"));
-                    // 4. Sospendere tutte le operazioni
                     pHangar->setAllowNewOperations(false);
-                    pHangar->setAlarm(); // Allarme critico globale
+                    pHangar->setAlarm();
+                    pUserPanel->displayAlarm();
 
-                    // 5. Se il drone è fuori, inviare ALARM via DRU (Serial)
-                    //if (!pHangar->isDroneDetected()) {
-                    //  pHangar->sendAlarmToDRU();
-                // }
-            
-
-            // L'uscita avviene solo con il pulsante RESET, gestito all'inizio di tick().
-            break;
+                    break;
                 }
+                if(pUserPanel->pressedReset()) {
+                    Logger.log(F("[HCH] RESET pressed. Returning to NORMAL state."));
+                    setState(NORMAL);
             }
-        }    
+        }   
+    } 
 }
 
 
@@ -88,4 +82,4 @@ bool HangarHealthCheckTask::checkAndSetJustEntered() {
         justEntered = false;
     }
     return bak;
-}*/
+}
