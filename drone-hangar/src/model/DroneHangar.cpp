@@ -123,7 +123,7 @@ void DroneHangar::sync() {
 
 
     // state: OK → PRE-ALARM
-    if (isHangarOk && isInPreAlarm()) {
+    /*if (isHangarOk && isInPreAlarm()) {
 
         hangarPreAlarm = true;
         hangarAlarmed = false;
@@ -184,7 +184,7 @@ void DroneHangar::sync() {
 
         pHW->getStartLed()->switchOn();
         pHW->getAlarmLed()->switchOff();
-    }
+    }*/
 
     if(isHangarOk && (takeOffInProgress || landingInProgress)) {
         blinkLed();

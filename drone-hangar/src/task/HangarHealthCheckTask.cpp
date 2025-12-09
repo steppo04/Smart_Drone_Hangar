@@ -18,7 +18,7 @@ void HangarHealthCheckTask::tick() {
     switch (state){ 
             case NORMAL: {
                 if (this->checkAndSetJustEntered()){
-                    Logger.log("[HCH] Normal");
+                    Logger.log("[HCH] Normal state: monitoring temperature.");
                     pHangar->reset(); 
                     if(pHangar -> isDroneInside()) {
                         pUserPanel->displayDroneInside();
