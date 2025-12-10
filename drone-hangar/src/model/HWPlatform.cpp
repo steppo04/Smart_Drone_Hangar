@@ -62,3 +62,45 @@ void HWPlatform::init(){
   ServoMotor* HWPlatform::getDoorMotor(){
     return this->pMotorDoor;
   }
+
+  /*void HWPlatform::test(){
+  pPirDetector->sync();
+  pButtonReset->sync();
+  bool detected = pPirDetector->isDetected();
+  float dist = pSonarDetector->getDistance();
+  bool pressed = pButtonReset->isPressed();
+  float temp = pTempSensor->getTemperature();  
+  pLedAction->switchOn();
+  pLedAlarm->switchOn();
+  pLedStart->switchOn();
+  pLcd->setCursor(0,0);
+  pLcd->print("testHW Drone Hangar");
+  pMotorDoor->on();
+  pMotorDoor->setPosition(90);
+  Logger.log("Pir: " + String((detected ? "detected" : "not detected")));
+  Logger.log("Sonar: " + String(dist) + "m");
+  Logger.log("Button Reset: " + String(pressed ? "pressed" : " not pressed"));
+  Logger.log("Temperature: " + String(temp) + "°C");
+  delay(1000);
+  pMotorDoor->setPosition(0);
+  delay(1000);
+  pMotorDoor->off();
+  pLcd->clear();
+  pLedAction->switchOff();
+  pLedAlarm->switchOff();
+  pLedStart->switchOff();
+}*/
+
+void HWPlatform::test() {
+    pMotorDoor->on(); 
+
+    Logger.log("Test: Vado a 150 (Aperto soft)...");
+    pMotorDoor->setPosition(150); // Non usare il for, vai diretto per testare
+    delay(2000); // Aspetta bene
+
+    Logger.log("Test: Torno a 30 (Chiuso soft)...");
+    pMotorDoor->setPosition(30);
+    delay(2000);
+
+    Logger.log("Test: Ciclo finito.");
+}

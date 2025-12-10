@@ -29,24 +29,16 @@ bool ServoMotorImpl::isOn(){
 }
 
 void ServoMotorImpl::setPosition(int angle){
-  // 1. Limita l'input tra 0 e 180 per sicurezza
-  if (angle > 180) angle = 180;
-  if (angle < 0) angle = 0;
-  
-  // 2. Memorizza l'angolo (fondamentale per quando fai on/off)
-  this->_angle = angle;
-
-  // 3. CALCOLO SICURO PER MS18
-  // I microservi come MS18 lavorano bene tra 750us e 2250us.
-  // 544us è troppo basso e lo manda in blocco.
-  // map(valore, min_in, max_in, min_out, max_out)
-  
-  int pulseWidth = map(angle, 0, 180, 750, 2250); 
-  
-  // 4. Invia comando solo se attivo
-  if (_on) {
-     motor.write(pulseWidth);
-  }
+	if (angle > 180){
+		angle = 180;
+	} else if (angle < 0){
+		angle = 0;
+	}
+  // 750 -> 0, 2250 -> 180 
+  // 750 + angle*(2250-750)/180
+  // updated values: min is 544, max 2400 (see ServoTimer2 doc)
+  float coeff = (2400.0-544.0)/180;
+  motor.write(544 + angle*coeff); 
 }
 
 void ServoMotorImpl::off(){

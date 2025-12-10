@@ -218,6 +218,9 @@ void DroneHangar::reset() {
     lastToggleTimeL2 = 0;
     led2State = false;
     currentTimeL2 = millis();
+    
+    pHW->getDoorMotor()->on();
+    this->closeDoor();
     pHW->getStartLed()->switchOn();
     pHW->getActionLed()->switchOff();
     pHW->getAlarmLed()->switchOff();

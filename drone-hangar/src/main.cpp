@@ -10,6 +10,9 @@
 #include "task/TakeOffTask.h"
 #include "task/LandingTask.h"
 #include "task/HangarHealthCheckTask.h"
+#include "task/TestHWTask.h"
+
+#define __TESTING_HW__  // Uncomment to enable hardware testing task
 
 Scheduler sched;
 
@@ -49,6 +52,13 @@ void setup() {
   sched.addTask(pTakeOffTask);
   sched.addTask(pLandingTask);
   sched.addTask(pHangarHealthCheckTask);
+#endif
+
+#ifdef __TESTING_HW__
+  /* Testing */
+  Task* pTestHWTask = new TestHWTask(pHWPlatform);
+  pTestHWTask->init(1000);
+  sched.addTask(pTestHWTask);
 #endif
 }
 
