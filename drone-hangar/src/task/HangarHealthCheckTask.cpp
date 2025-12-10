@@ -5,6 +5,7 @@
 #include "kernel/Logger.h"
 
 #define T4_MILLIS 10000
+#define T3_MILLIS 5000
 HangarHealthCheckTask::HangarHealthCheckTask(DroneHangar* pHangar, UserPanel* pUserPanel) {
     this->pHangar = pHangar;
     this->pUserPanel = pUserPanel;
@@ -27,23 +28,36 @@ void HangarHealthCheckTask::tick() {
                     }
                 }
                 if (pHangar->isTempHigh()) { // T >= TEMP1
-                    setState(PREALARM);
+                    setState(TIMING_PRE_ALARM);
                  }
                 break;
             }
-
+            case TIMING_PRE_ALARM: {
+                if (elapsedTimeInState() >= T3_MILLIS) {
+                    Logger.log(F("[HCH] Time Out: entering in pre alarm state."));
+                    setState(PREALARM);
+                }
+                break;
+            }
             case PREALARM: { 
                 if (this->checkAndSetJustEntered()){
                     Logger.log("[HCH] Pre-Alarm: new operations suspended.");
-                    pHangar->setPreAlarm();// Deve impostare i LED di PRE-ALARM (L1, L2, L3 OFF)
+                    pHangar->setPreAlarm();
                 }
                 if (pHangar->isTempOk()) { // T < TEMP1 
                      setState(NORMAL);
                 }
-                else if (pHangar->isTempVeryHigh() || elapsedTimeInState() > T4_MILLIS ) {
-                    setState(ALARM);
+                else if (pHangar->isTempVeryHigh() ) {
+                    setState(TIMING_ALARM);
             }
             break;
+            }
+            case TIMING_ALARM: {
+                if (elapsedTimeInState() >= T4_MILLIS) {
+                    Logger.log(F("[HCH] Time Out: entering in alarm state."));
+                    setState(ALARM);
+                }
+                break;
             }
 
             case ALARM: {

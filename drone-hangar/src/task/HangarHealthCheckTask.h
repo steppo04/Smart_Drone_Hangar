@@ -11,9 +11,11 @@ class HangarHealthCheckTask : public Task {
          * @brief Stati della FSM per il controllo della salute dell'Hangar (temperatura).
          */
         enum {
-            NORMAL,       // T < Temp1
-            PREALARM,     // Temp1 <= T < Temp2, o T >= Temp1 ma T4 non è scaduto
-            ALARM         // T >= Temp2 o T >= Temp1 per un tempo > T4
+            NORMAL, 
+            TIMING_PRE_ALARM,     // T < Temp1
+            PREALARM,
+            TIMING_ALARM,     // Temp1 <= T < Temp2, o T >= Temp1 ma T4 non è scaduto
+            ALARM       // T >= Temp2 o T >= Temp1 per un tempo > T4
         };
         
         /**
