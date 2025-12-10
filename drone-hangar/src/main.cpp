@@ -12,7 +12,7 @@
 #include "task/HangarHealthCheckTask.h"
 #include "task/TestHWTask.h"
 
-#define __TESTING_HW__  // Uncomment to enable hardware testing task
+//#define __TESTING_HW__  // Uncomment to enable hardware testing task
 
 Scheduler sched;
 

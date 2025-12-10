@@ -28,42 +28,42 @@ void HWPlatform::init(){
   // pPirUserDetector->calibrate();
 }
 
-  Button* HWPlatform::getResetButton(){
-    return this->pButtonReset;
-  }
+Button* HWPlatform::getResetButton(){
+  return this->pButtonReset;
+}
 
-  Led*  HWPlatform::getStartLed(){
-    return this->pLedStart;
-  }
-  Led*  HWPlatform::getActionLed(){
-    return this->pLedAction;
-  }
+Led*  HWPlatform::getStartLed(){
+  return this->pLedStart;
+}
+Led*  HWPlatform::getActionLed(){
+  return this->pLedAction;
+}
 
-  Led*  HWPlatform::getAlarmLed(){
-    return this->pLedAlarm;
-  }
+Led*  HWPlatform::getAlarmLed(){
+  return this->pLedAlarm;
+}
 
-  LiquidCrystal_I2C* HWPlatform::getUserPanelLcd(){
-    return this->pLcd;
-  }
+LiquidCrystal_I2C* HWPlatform::getUserPanelLcd(){
+  return this->pLcd;
+}
 
-  Pir*  HWPlatform::getDetectorPir(){
-    return this->pPirDetector;
-  }
+Pir*  HWPlatform::getDetectorPir(){
+  return this->pPirDetector;
+}
 
-  Sonar* HWPlatform::getDetectorSonar(){
-    return this->pSonarDetector;
-  }
+Sonar* HWPlatform::getDetectorSonar(){
+  return this->pSonarDetector;
+}
 
-  TempSensor* HWPlatform::getTempSensor(){
-    return this->pTempSensor;
-  }
+TempSensor* HWPlatform::getTempSensor(){
+  return this->pTempSensor;
+}
 
-  ServoMotor* HWPlatform::getDoorMotor(){
-    return this->pMotorDoor;
-  }
+ServoMotor* HWPlatform::getDoorMotor(){
+  return this->pMotorDoor;
+}
 
-  /*void HWPlatform::test(){
+void HWPlatform::test() {
   pPirDetector->sync();
   pButtonReset->sync();
   bool detected = pPirDetector->isDetected();
@@ -89,18 +89,4 @@ void HWPlatform::init(){
   pLedAction->switchOff();
   pLedAlarm->switchOff();
   pLedStart->switchOff();
-}*/
-
-void HWPlatform::test() {
-    pMotorDoor->on(); 
-
-    Logger.log("Test: Vado a 150 (Aperto soft)...");
-    pMotorDoor->setPosition(150); // Non usare il for, vai diretto per testare
-    delay(2000); // Aspetta bene
-
-    Logger.log("Test: Torno a 30 (Chiuso soft)...");
-    pMotorDoor->setPosition(30);
-    delay(2000);
-
-    Logger.log("Test: Ciclo finito.");
 }
