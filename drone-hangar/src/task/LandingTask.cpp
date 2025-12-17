@@ -45,7 +45,6 @@ void LandingTask::tick() {
                 hangar->startBlinkLed();
                 setState(DOOR_OPENING);
             } else if (hangar->isHangarPreAlarm() || hangar->isHangarAlarmed()) {
-                Logger.log(F("[LN]: Landing aborted due to PRE-ALARM or ALARM state."));
                 hangar->setLandingInProgress(false);
             }
             break;

@@ -16,8 +16,8 @@
 
 #define MOTOR_PIN 9
 
-#define TEMP1 27
-#define TEMP2 28
+#define TEMP1 28
+#define TEMP2 29
 #define BLINK_PERIOD_MS 1000
 #define DOOR_TIME  1000      
 #define T2_ENTER_TIME 10000
