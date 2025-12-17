@@ -4,10 +4,6 @@
 #include "kernel/Logger.h"
 #include "model/UserPanel.h"
 
-
-#define DOOR_TIME  5000      
-#define T2_ENTER_TIME 10000
-
 LandingTask::LandingTask(DroneHangar* hangar, UserPanel* pPanel, Dashboard* dashboard) {
     this->hangar = hangar;
     this->dashboard = dashboard;
@@ -46,7 +42,6 @@ void LandingTask::tick() {
             if (hangar->isDroneDetected() && !hangar->isHangarPreAlarm() && !hangar->isHangarAlarmed() && hangar->isLandingInProgress()) {
                 Logger.log(F("[LN]: Drone detected inside hangar, opening door"));
                 pPanel->displayLanding();
-                hangar->openDoor();
                 hangar->startBlinkLed();
                 setState(DOOR_OPENING);
             } else if (hangar->isHangarPreAlarm() || hangar->isHangarAlarmed()) {
@@ -55,14 +50,20 @@ void LandingTask::tick() {
             }
             break;
 
-        case DOOR_OPENING:
-            if (elapsedTimeInState() >= DOOR_TIME) {
-                Logger.log(F("[LN]: Door opened, landing drone"));
-                //pDroneHangar->stopOpeningDoor();
-                
+        case DOOR_OPENING:{
+            if (checkAndSetJustEntered()) {
+                Logger.log(F("[TO]: OPENING_DOOR state entered."));
+                hangar->activateDoor(); // Motore ON
+                hangar->openDoor();
+            }  
+            
+            if (elapsedTimeInState() > DOOR_TIME) {
+                hangar->deactivateDoor(); // Motore OFF per risparmiare energia e attivare sensori
+                Logger.log(F("[TO]: Door opened. Waiting for drone exit."));
                 setState(LANDING);
             }
             break;
+        }
 
         case LANDING: {
             if(checkAndSetJustEntered()) {
@@ -86,15 +87,20 @@ void LandingTask::tick() {
             break;
         }
 
-        case DOOR_CLOSING:
-            if (elapsedTimeInState() >= DOOR_TIME) {
-                Logger.log(F("[LN]: Door closed, drone inside hangar."));
-                
-                //hangar->stopClosingDoor();
-                
+        case DOOR_CLOSING: {
+            if(checkAndSetJustEntered()) {
+                Logger.log(F("[TO]: CLOSING_DOOR state entered."));
+                hangar->activateDoor(); // Motore ON
+                hangar->closeDoor(); 
+            }
+            
+            if (elapsedTimeInState() > DOOR_TIME) {
+                hangar->deactivateDoor(); // Motore OFF
+                Logger.log(F("[TO]: Door closed. Operation completed."));
                 setState(DRONE_INSIDE);
             }
             break;
+        }
 
         case DRONE_INSIDE:
             if(checkAndSetJustEntered()) {

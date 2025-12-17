@@ -1,9 +1,6 @@
 #include "task/TakeOffTask.h"
 #include "kernel/Logger.h"
 
-#define T1_EXIT_TIME 10000  // max time allowed for drone to exit hangar in ms
-#define DOOR_TIME  5000     // time to open/close door in ms
-
 TakeOffTask::TakeOffTask(DroneHangar* hangar, UserPanel* panel, Dashboard* dashboard) {
     this->hangar = hangar;
     this->panel = panel;

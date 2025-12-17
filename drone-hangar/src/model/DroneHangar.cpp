@@ -13,22 +13,8 @@ void DroneHangar::init() {
     filteredDistance = 0.0;
     temperature = 20.0;
     droneDistance = 10.0;
-    isHangarOk = true;
-    hangarPreAlarm = false;
-    hangarAlarmed = false;
-    dronePIRDetected = false;
-    allowNewOperations = true;
-    takeOffInProgress = false;
-    landingInProgress = false;
-    lastToggleTimeL2 = 0;
-    led2State = false;
     currentTimeL2 = millis();
     this->reset();
-    pHW->getDoorMotor()->on();
-    pHW->getStartLed()->switchOn();
-    pHW->getActionLed()->switchOff();
-    pHW->getAlarmLed()->switchOff();
-    pHW->getDoorMotor()->off();
 }
 
 //sensors
@@ -121,71 +107,6 @@ void DroneHangar::sync() {
                    " state=" + stateToString());
     }
 
-
-    // state: OK → PRE-ALARM
-    /*if (isHangarOk && isInPreAlarm()) {
-
-        hangarPreAlarm = true;
-        hangarAlarmed = false;
-        isHangarOk = false;
-
-        // LED
-        pHW->getStartLed()->switchOff();
-        pHW->getAlarmLed()->switchOff();
-        pHW->getActionLed()->switchOff();
-    }
-
-    // state: PRE-ALARM → OK
-    if (hangarPreAlarm && isTempOk()) {
-
-        hangarPreAlarm = false;
-        hangarAlarmed = false;
-        isHangarOk = true;
-
-        // LED
-        pHW->getStartLed()->switchOn();
-        pHW->getAlarmLed()->switchOff();
-    }
-
-    // state: PRE-ALARM → ALARM
-    if (hangarPreAlarm && isInAlarm()) {
-
-        hangarAlarmed = true;
-        hangarPreAlarm = false;
-        isHangarOk = false;
-
-        closeDoor();
-
-        // LED
-        pHW->getStartLed()->switchOff();
-        pHW->getActionLed()->switchOff();
-        pHW->getAlarmLed()->switchOn();
-    }
-
-    // state: OK → ALARM 
-    if (isHangarOk && isInAlarm()) {
-
-        hangarAlarmed = true;
-        hangarPreAlarm = false;
-        isHangarOk = false;
-
-        closeDoor();
-
-        pHW->getStartLed()->switchOff();
-        pHW->getActionLed()->switchOff();
-        pHW->getAlarmLed()->switchOn();
-    }
-
-    // state: ALARM → OK
-    if (hangarAlarmed && isTempOk()) {
-
-        hangarAlarmed = false;
-        isHangarOk = true;
-
-        pHW->getStartLed()->switchOn();
-        pHW->getAlarmLed()->switchOff();
-    }*/
-
     if(isHangarOk && (takeOffInProgress || landingInProgress)) {
         blinkLed();
     } else {
@@ -220,7 +141,6 @@ void DroneHangar::reset() {
     currentTimeL2 = millis();
     
     pHW->getDoorMotor()->on();
-    this->closeDoor();
     pHW->getStartLed()->switchOn();
     pHW->getActionLed()->switchOff();
     pHW->getAlarmLed()->switchOff();
@@ -244,12 +164,13 @@ void DroneHangar::setAlarm() {
     isHangarOk = false;
 
     activateDoor();
-    closeDoor();
+    deactivateDoor();
 
     // LED
     pHW->getStartLed()->switchOff();
     pHW->getActionLed()->switchOff();
     pHW->getAlarmLed()->switchOn();
+
 }
 
 void DroneHangar::setAllowNewOperations(bool allowed) {
@@ -323,15 +244,9 @@ int DroneHangar::getHangarStateCode() {
 }
 
 //private methods
-
-/*Durante l’apertura o la chiusura, il servo consuma molta corrente e vibra.
-Il sonar (WASTE DETECTOR) e il sensore di temperatura (TEMP) 
-sono sensori sensibili ai disturbi elettrici e meccanici 
-generati dal movimento del motore.*/
 bool DroneHangar::sensorsCanBeUsed(){
   return !pHW->getDoorMotor()->isOn();
 }
-
 
 String DroneHangar::stateToString() {
     String state = "";
